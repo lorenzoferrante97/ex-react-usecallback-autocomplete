@@ -1,9 +1,38 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useState, useContext, useCallback } from 'react';
 
 const GlobalContext = createContext();
 
 const GlobalProvider = ({ children }) => {
-  const value = {};
+  // fetch products
+  const getProducts = async (searchQuery) => {
+    console.log('searchQuery into fetch: ', searchQuery);
+    try {
+      const fetchProducts = await (await fetch(`https://dummyjson.com/products/search?limit=7&q=${searchQuery}`)).json();
+
+      // console.log('fetchProducts: ', fetchProducts);
+
+      const flteredRes = fetchProducts.products.filter((prod) => prod.title.toLowerCase().includes(searchQuery));
+
+      return flteredRes;
+    } catch (error) {
+      throw new Error("Can't search products with fetch");
+    }
+  };
+
+  // handle search
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = (e) => setSearchQuery(e.target.value);
+
+  // set final prods
+  const [finalProds, setFinalProds] = useState([]);
+
+  const settingFinalProds = useCallback((prods) => {
+    console.log('prods: ', prods);
+    setFinalProds(prods);
+  }, []);
+
+  const value = { getProducts, handleSearch, settingFinalProds, searchQuery, finalProds };
 
   return <GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>;
 };
