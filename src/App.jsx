@@ -2,17 +2,18 @@
 
 import { useGlobalContext } from './context/GlobalContext';
 import { useMemo, useState } from 'react';
+import AutoComplete from './components/AutoComplete';
 
 function App() {
-  const { handleSearch, getProducts, searchQuery, settingFinalProds, finalProds } = useGlobalContext();
+  const { getProducts, settingFinalProds, finalProds } = useGlobalContext();
 
   const [searchValue, setSearchValue] = useState('');
 
   return (
     <>
-      <main>
+      <main id="main">
+        <h1>Cerca prodotti</h1>
         <div className="input-box">
-          <h1>Cerca prodotti</h1>
           <input
             onChange={(e) => {
               setSearchValue(e.target.value);
@@ -24,10 +25,7 @@ function App() {
             type="text"
             placeholder="airpods"
           />
-        </div>
-        <div>
-          {console.log('searchValue: ', searchValue)}
-          <ul>{finalProds.length > 0 && searchValue.length > 0 && finalProds.map((prod) => <li key={prod.id}>{prod.title}</li>)}</ul>
+          {finalProds.length > 0 && searchValue.length > 0 && <AutoComplete prods={finalProds} search={searchValue} />}
         </div>
       </main>
     </>

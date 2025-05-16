@@ -1,5 +1,4 @@
 import { createContext, useState, useContext, useCallback } from 'react';
-
 const GlobalContext = createContext();
 
 const GlobalProvider = ({ children }) => {
@@ -19,11 +18,6 @@ const GlobalProvider = ({ children }) => {
     }
   };
 
-  // handle search
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const handleSearch = (e) => setSearchQuery(e.target.value);
-
   // set final prods
   const [finalProds, setFinalProds] = useState([]);
 
@@ -32,7 +26,7 @@ const GlobalProvider = ({ children }) => {
     setFinalProds(prods);
   }, []);
 
-  const value = { getProducts, handleSearch, settingFinalProds, searchQuery, finalProds };
+  const value = { getProducts, settingFinalProds, finalProds };
 
   return <GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>;
 };
