@@ -2,6 +2,16 @@ import { createContext, useState, useContext, useCallback } from 'react';
 const GlobalContext = createContext();
 
 const GlobalProvider = ({ children }) => {
+  // debounce
+  const debounce = (callback, delay) => {
+    let timeout;
+
+    return (value) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => callback(value), delay);
+    };
+  };
+
   // fetch products
   const getProducts = async (searchQuery) => {
     console.log('searchQuery into fetch: ', searchQuery);
@@ -18,6 +28,15 @@ const GlobalProvider = ({ children }) => {
     }
   };
 
+  const callbackDebounce = useCallback(
+    debounce((e) => {
+      getProducts(e.target.value).then((prods) => {
+        settingFinalProds(prods);
+      });
+    }, 300),
+    []
+  );
+
   // set final prods
   const [finalProds, setFinalProds] = useState([]);
 
@@ -26,7 +45,7 @@ const GlobalProvider = ({ children }) => {
     setFinalProds(prods);
   }, []);
 
-  const value = { getProducts, settingFinalProds, finalProds };
+  const value = { getProducts, settingFinalProds, callbackDebounce, finalProds };
 
   return <GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>;
 };

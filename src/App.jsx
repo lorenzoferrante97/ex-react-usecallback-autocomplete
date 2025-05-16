@@ -5,7 +5,7 @@ import { useMemo, useState } from 'react';
 import AutoComplete from './components/AutoComplete';
 
 function App() {
-  const { getProducts, settingFinalProds, finalProds } = useGlobalContext();
+  const { getProducts, settingFinalProds, finalProds, callbackDebounce } = useGlobalContext();
 
   const [searchValue, setSearchValue] = useState('');
 
@@ -17,9 +17,10 @@ function App() {
           <input
             onChange={(e) => {
               setSearchValue(e.target.value);
-              getProducts(e.target.value).then((prods) => {
-                settingFinalProds(prods);
-              });
+              // getProducts(e.target.value).then((prods) => {
+              //   settingFinalProds(prods);
+              // });
+              callbackDebounce(e);
             }}
             name="search"
             type="text"
